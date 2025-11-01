@@ -1,0 +1,28 @@
+{
+	"name": "table_customer_location",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cntry",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "customer_location"
+		}
+	}
+}

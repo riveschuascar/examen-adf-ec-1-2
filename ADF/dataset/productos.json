@@ -1,0 +1,47 @@
+{
+	"name": "productos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "productos.csv",
+				"container": "datos-bruto"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "prd_id",
+				"type": "String"
+			},
+			{
+				"name": "prd_key",
+				"type": "String"
+			},
+			{
+				"name": "prd_nm",
+				"type": "String"
+			},
+			{
+				"name": "prd_cost",
+				"type": "String"
+			},
+			{
+				"name": "prd_line",
+				"type": "String"
+			}
+		]
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"name": "table_product",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "prd_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prd_key",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prd_nm",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prd_cost",
+				"type": "nvarchar"
+			},
+			{
+				"name": "prd_line",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "product"
+		}
+	}
+}

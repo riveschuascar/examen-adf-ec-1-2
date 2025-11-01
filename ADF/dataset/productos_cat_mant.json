@@ -1,0 +1,43 @@
+{
+	"name": "productos_cat_mant",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "productos_cat_mant.csv",
+				"container": "datos-bruto"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID",
+				"type": "String"
+			},
+			{
+				"name": "CAT",
+				"type": "String"
+			},
+			{
+				"name": "SUBCAT",
+				"type": "String"
+			},
+			{
+				"name": "MAINTENANCE",
+				"type": "String"
+			}
+		]
+	}
+}

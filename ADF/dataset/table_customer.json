@@ -1,0 +1,44 @@
+{
+	"name": "table_customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cst_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_key",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_firstname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_lastname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_marital_status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_gndr",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "customer"
+		}
+	}
+}
