@@ -1,0 +1,56 @@
+{
+	"name": "sales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sls_ord_num",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_prd_key",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_cust_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sls_order_dt",
+				"type": "date"
+			},
+			{
+				"name": "sls_ship_dt",
+				"type": "date"
+			},
+			{
+				"name": "sls_sales",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sls_quantity",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sls_price",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "sales"
+		}
+	}
+}
