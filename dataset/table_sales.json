@@ -1,0 +1,53 @@
+{
+	"name": "table_sales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sls_ord_num",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_prd_key",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_cust_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_order_dt",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_ship_dt",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_sales",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_quantity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sls_price",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "sales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

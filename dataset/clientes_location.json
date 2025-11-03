@@ -1,0 +1,36 @@
+{
+	"name": "clientes_location",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "clientes_location.csv",
+				"container": "datos-bruto"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CID",
+				"type": "String"
+			},
+			{
+				"name": "CNTRY",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

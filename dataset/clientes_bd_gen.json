@@ -1,0 +1,40 @@
+{
+	"name": "clientes_bd_gen",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "clientes_bd_gen.csv",
+				"container": "datos-bruto"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CID",
+				"type": "String"
+			},
+			{
+				"name": "BDATE",
+				"type": "String"
+			},
+			{
+				"name": "GEN",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

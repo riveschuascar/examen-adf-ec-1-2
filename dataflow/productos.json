@@ -1,0 +1,66 @@
+{
+	"name": "productos",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "productos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "table_product",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          prd_id as string,",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as string,",
+				"          prd_line as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          prd_id as string,",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as string,",
+				"          prd_line as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          prd_id,",
+				"          prd_key,",
+				"          prd_nm,",
+				"          prd_cost,",
+				"          prd_line",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

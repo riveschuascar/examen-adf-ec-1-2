@@ -1,0 +1,37 @@
+{
+	"name": "table_product_cat_mant",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "subcat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "maintenance",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "product_cat_mant"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

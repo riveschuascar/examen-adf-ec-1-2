@@ -1,0 +1,33 @@
+{
+	"name": "table_customer_bdate_gen",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "bdate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "gen",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "customer_bdate_gen"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
