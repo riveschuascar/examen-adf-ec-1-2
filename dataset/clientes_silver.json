@@ -5,6 +5,9 @@
 			"referenceName": "ls_datalake_ventas",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "silver"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

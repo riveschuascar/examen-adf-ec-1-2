@@ -1,6 +1,9 @@
 {
-	"name": "dataflow1",
+	"name": "silver_clientes",
 	"properties": {
+		"folder": {
+			"name": "silver"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
