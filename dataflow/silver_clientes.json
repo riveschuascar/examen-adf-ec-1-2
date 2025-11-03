@@ -90,7 +90,7 @@
 				"          LASTNAME = upper(trim(cst_lastname)),",
 				"          MARITAL_STATUS = trim(cst_marital_status),",
 				"          GENDER = trim(cst_gndr),",
-				"          cst_id_clean = toInteger(replace(replace(cst_key,'AW',''),'0',''))) ~> derivedColumn1",
+				"          cst_id_clean = toInteger(substring(cst_key,5,5))) ~> derivedColumn1",
 				"clientesBdGen derive(CID_clean = replace(CID,'NAS',''),",
 				"          BDATE = toDate(BDATE,'yyyy-MM-dd'),",
 				"          GENDER_BD = upper(trim(GEN))) ~> derivedColumn2",
