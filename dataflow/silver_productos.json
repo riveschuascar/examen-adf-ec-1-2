@@ -1,5 +1,5 @@
 {
-	"name": "silver_productos",
+	"name": "DF_Silver_Product_Cleaning",
 	"properties": {
 		"folder": {
 			"name": "silver"
@@ -8,45 +8,169 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"name": "ProductSource",
 					"dataset": {
-						"referenceName": "table_product",
+						"referenceName": "bronze_product",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"schemaLinkedService": {
+						"referenceName": "LS_Bronze",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
+					"name": "CategorySource",
 					"dataset": {
-						"referenceName": "table_product_cat_mant",
+						"referenceName": "bronze_category",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"schemaLinkedService": {
+						"referenceName": "LS_Bronze",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
-			"sinks": [],
-			"transformations": [],
-			"scriptLines": [
-				"source(output(",
-				"          prd_id as string,",
-				"          prd_key as string,",
-				"          prd_nm as string,",
-				"          prd_cost as string,",
-				"          prd_line as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
-				"source(output(",
-				"          id as string,",
-				"          cat as string,",
-				"          subcat as string,",
-				"          maintenance as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2"
-			]
+			"transformations": [
+				{
+					"name": "CleanProduct",
+					"type": "Select",
+					"incomingStreams": [
+						"ProductSource"
+					],
+					"typeProperties": {
+						"select": [
+							{
+								"name": "prd_id",
+								"expression": "toInteger(prd_id)"
+							},
+							{
+								"name": "prd_key",
+								"expression": "trim(prd_key)"
+							},
+							{
+								"name": "prd_nm",
+								"expression": "trim(prd_nm)"
+							},
+							{
+								"name": "prd_cost",
+								"expression": "toInteger(prd_cost)"
+							},
+							{
+								"name": "prd_line",
+								"expression": "trim(prd_line)"
+							}
+						]
+					}
+				},
+				{
+					"name": "CleanCategory",
+					"type": "Select",
+					"incomingStreams": [
+						"CategorySource"
+					],
+					"typeProperties": {
+						"select": [
+							{
+								"name": "ID",
+								"expression": "trim(ID)"
+							},
+							{
+								"name": "cat",
+								"expression": "trim(CAT)"
+							},
+							{
+								"name": "subcat",
+								"expression": "trim(SUBCAT)"
+							},
+							{
+								"name": "maintenance",
+								"expression": "iif(upper(trim(MAINTENANCE)) == 'YES', true(), false())"
+							}
+						]
+					}
+				},
+				{
+					"name": "JoinProductCategory",
+					"type": "Join",
+					"incomingStreams": [
+						"CleanProduct",
+						"CleanCategory"
+					],
+					"typeProperties": {
+						"joinType": "Inner",
+						"conditions": [
+							{
+								"left": "prd_key",
+								"right": "ID"
+							}
+						]
+					}
+				},
+				{
+					"name": "SelectSilverColumns",
+					"type": "Select",
+					"incomingStreams": [
+						"JoinProductCategory"
+					],
+					"typeProperties": {
+						"select": [
+							{
+								"name": "prd_id",
+								"expression": "prd_id"
+							},
+							{
+								"name": "prd_key",
+								"expression": "prd_key"
+							},
+							{
+								"name": "prd_nm",
+								"expression": "prd_nm"
+							},
+							{
+								"name": "prd_cost",
+								"expression": "prd_cost"
+							},
+							{
+								"name": "prd_line",
+								"expression": "prd_line"
+							},
+							{
+								"name": "cat",
+								"expression": "cat"
+							},
+							{
+								"name": "maintenance",
+								"expression": "maintenance"
+							}
+						]
+					}
+				}
+			],
+			"sinks": [
+				{
+					"name": "SilverSink",
+					"dataset": {
+						"referenceName": "silver_product",
+						"type": "DatasetReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LS_Silver",
+						"type": "LinkedServiceReference"
+					},
+					"incomingStreams": [
+						"SelectSilverColumns"
+					],
+					"typeProperties": {
+						"preSQL": "TRUNCATE TABLE silver.product;",
+						"formatSettings": {
+							"type": "table"
+						},
+						"writeBatchSize": 1000,
+						"writeMethod": "bulkInsert"
+					}
+				}
+			],
+			"script": "source(allowSchemaDrift:true, format:'delimited') ~> ProductSource\nsource(allowSchemaDrift:true, format:'delimited') ~> CategorySource\nProductSource select(toInteger(prd_id) as prd_id, trim(prd_key) as prd_key, trim(prd_nm) as prd_nm, toInteger(prd_cost) as prd_cost, trim(prd_line) as prd_line) ~> CleanProduct\nCategorySource select(trim(ID) as ID, trim(CAT) as cat, trim(SUBCAT) as subcat, iif(upper(trim(MAINTENANCE)) == 'YES', true(), false()) as maintenance) ~> CleanCategory\nCleanProduct, CleanCategory join(CleanProduct.prd_key == CleanCategory.ID, 'inner') ~> JoinProductCategory\nJoinProductCategory select(prd_id, prd_key, prd_nm, prd_cost, prd_line, cat, maintenance) ~> SelectSilverColumns\nSelectSilverColumns sink(allowSchemaDrift:false, format:'table', table:'silver.product', preSQL:'TRUNCATE TABLE silver.product;', writeMethod:'bulkInsert') ~> SilverSink"
 		}
 	}
 }
