@@ -69,8 +69,8 @@
 				"          FIRSTNAME = upper(trim(cst_firstname)),",
 				"          LASTNAME = upper(trim(cst_lastname)),",
 				"          MARITAL_STATUS = trim(cst_marital_status),",
-				"          GENDER = ERROR_FUNCTION('')) ~> derivedColumn1",
-				"clientesBdGen derive() ~> derivedColumn2",
+				"          GENDER = trim(cst_gndr)) ~> derivedColumn1",
+				"clientesBdGen derive(CID_clean = replace(CID,'-','')) ~> derivedColumn2",
 				"clientesLocation derive() ~> derivedColumn3"
 			]
 		}
