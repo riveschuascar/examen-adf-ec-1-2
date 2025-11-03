@@ -13,7 +13,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumnVentas"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          sls_ord_num as string,",
@@ -27,7 +31,9 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> ventasDetalles"
+				"     ignoreNoFilesFound: false) ~> ventasDetalles",
+				"ventasDetalles derive(ORD_NUM = upper(trim(sls_ord_num)),",
+				"          PRD_KEY = upper(trim(sls_prd_key))) ~> derivedColumnVentas"
 			]
 		}
 	}
