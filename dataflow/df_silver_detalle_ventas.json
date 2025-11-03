@@ -1,6 +1,9 @@
 {
-	"name": "df_detalle_ventas_silver",
+	"name": "df_silver_detalle_ventas",
 	"properties": {
+		"folder": {
+			"name": "silver"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
@@ -15,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "silver_detalles_venta",
+						"referenceName": "detalles_ventas",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -68,21 +71,15 @@
 				"     input(",
 				"          sls_ord_num as string,",
 				"          sls_prd_key as string,",
-				"          sls_cust_id as integer,",
-				"          sls_order_dt as date,",
-				"          sls_ship_dt as date,",
-				"          sls_sales as integer,",
-				"          sls_quantity as integer,",
-				"          sls_price as integer",
+				"          sls_cust_id as string,",
+				"          sls_order_dt as string,",
+				"          sls_ship_dt as string,",
+				"          sls_sales as string,",
+				"          sls_quantity as string,",
+				"          sls_price as string",
 				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

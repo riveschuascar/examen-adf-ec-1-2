@@ -1,0 +1,29 @@
+{
+	"name": "dim_genero",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_gen",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "gen",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "dim_gender"
+		}
+	}
+}

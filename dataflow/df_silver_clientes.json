@@ -1,5 +1,5 @@
 {
-	"name": "silver_clientes",
+	"name": "df_silver_clientes",
 	"properties": {
 		"folder": {
 			"name": "silver"
@@ -89,8 +89,7 @@
 				"          FIRSTNAME = upper(trim(cst_firstname)),",
 				"          LASTNAME = upper(trim(cst_lastname)),",
 				"          MARITAL_STATUS = trim(cst_marital_status),",
-				"          GENDER = trim(cst_gndr),",
-				"          cst_id_clean = toInteger(substring(cst_key,5,5))) ~> derivedColumn1",
+				"          GENDER = trim(cst_gndr)) ~> derivedColumn1",
 				"clientesBdGen derive(CID_clean = replace(CID,'NAS',''),",
 				"          BDATE = toDate(BDATE,'yyyy-MM-dd'),",
 				"          GENDER_BD = upper(trim(GEN))) ~> derivedColumn2",
