@@ -12,7 +12,11 @@
 					"name": "ventasDetalles"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumnVentas"
@@ -51,18 +55,14 @@
 				"          sls_ship_dt,",
 				"          sls_sales,",
 				"          sls_quantity,",
-				"          sls_price,",
-				"          ORD_NUM,",
-				"          PRD_KEY,",
-				"          CUST_ID,",
-				"          ORDER_DATE,",
-				"          SHIP_DATE,",
-				"          SALES,",
-				"          QUANTITY,",
-				"          PRICE",
+				"          sls_price",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
