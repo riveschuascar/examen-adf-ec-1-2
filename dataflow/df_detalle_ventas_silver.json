@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumnVentas"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -39,7 +42,27 @@
 				"          SHIP_DATE = toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd'),",
 				"          SALES = toDecimal(sls_sales,10,2),",
 				"          QUANTITY = toInteger(sls_quantity),",
-				"          PRICE = toDecimal(sls_price,10,2)) ~> derivedColumnVentas"
+				"          PRICE = toDecimal(sls_price,10,2)) ~> derivedColumnVentas",
+				"derivedColumnVentas select(mapColumn(",
+				"          sls_ord_num,",
+				"          sls_prd_key,",
+				"          sls_cust_id,",
+				"          sls_order_dt,",
+				"          sls_ship_dt,",
+				"          sls_sales,",
+				"          sls_quantity,",
+				"          sls_price,",
+				"          ORD_NUM,",
+				"          PRD_KEY,",
+				"          CUST_ID,",
+				"          ORDER_DATE,",
+				"          SHIP_DATE,",
+				"          SALES,",
+				"          QUANTITY,",
+				"          PRICE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
