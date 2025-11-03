@@ -1,0 +1,138 @@
+{
+	"name": "df_silver_productos",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "table_product",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "table_product_cat_mant",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_productos",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "cast1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "derivedColumn5"
+				},
+				{
+					"name": "derivedColumn6"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn7"
+				},
+				{
+					"name": "cast2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          prd_id as string,",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as string,",
+				"          prd_line as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          id as string,",
+				"          cat as string,",
+				"          subcat as string,",
+				"          maintenance as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 cast(output(",
+				"          prd_id as integer",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 derive(prd_key = trim(prd_key),",
+				"          prd_nm = trim(prd_nm),",
+				"          prd_line = trim(prd_line)) ~> derivedColumn1",
+				"derivedColumn1 derive(prd_cost = iif(isNull(prd_cost) || trim(prd_cost) == \"\", \"0\", trim(prd_cost))) ~> derivedColumn3",
+				"source2 derive(id = trim(id),",
+				"          cat = trim(cat),",
+				"          subcat = trim(subcat)) ~> derivedColumn4",
+				"derivedColumn4 derive(mant_clean = iif(upper(trim(maintenance)) == 'YES', true(), false())) ~> derivedColumn5",
+				"derivedColumn5 derive(id_clean = upper(replace(trim(id), '_', '-'))) ~> derivedColumn6",
+				"derivedColumn7, derivedColumn6 join(prd_key_clean == id_clean,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"cast2 derive(prd_key_clean = regexReplace(prd_key, '^([A-Z]{2}-[A-Z]{2}).*$', '$1')) ~> derivedColumn7",
+				"derivedColumn3 cast(output(",
+				"          prd_cost as integer",
+				"     ),",
+				"     errors: true) ~> cast2",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          prd_id as integer,",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as integer,",
+				"          prd_line as string,",
+				"          cat as string,",
+				"          maintenance as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          prd_key = prd_key_clean,",
+				"          prd_nm,",
+				"          prd_cost,",
+				"          prd_line,",
+				"          cat,",
+				"          maintenance = mant_clean",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
