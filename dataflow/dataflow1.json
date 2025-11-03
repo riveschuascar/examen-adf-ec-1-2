@@ -28,6 +28,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "clientes_silver",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
