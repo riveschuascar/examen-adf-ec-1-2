@@ -70,7 +70,8 @@
 				"          LASTNAME = upper(trim(cst_lastname)),",
 				"          MARITAL_STATUS = trim(cst_marital_status),",
 				"          GENDER = trim(cst_gndr)) ~> derivedColumn1",
-				"clientesBdGen derive(CID_clean = replace(CID,'-','')) ~> derivedColumn2",
+				"clientesBdGen derive(CID_clean = replace(CID,'-',''),",
+				"          COUNTRY = upper(trim(CNTRY))) ~> derivedColumn2",
 				"clientesLocation derive() ~> derivedColumn3"
 			]
 		}
