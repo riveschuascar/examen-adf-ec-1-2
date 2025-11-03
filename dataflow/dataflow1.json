@@ -129,26 +129,7 @@
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          cst_id,",
-				"          cst_key,",
-				"          cst_firstname,",
-				"          cst_lastname,",
-				"          cst_marital_status,",
-				"          cst_gndr,",
-				"          CID_clean,",
-				"          FIRSTNAME,",
-				"          LASTNAME,",
-				"          MARITAL_STATUS,",
-				"          GENDER,",
-				"          CID,",
-				"          BDATE,",
-				"          GEN,",
-				"          GENDER_BD,",
-				"          CNTRY,",
-				"          COUNTRY",
-				"     )) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
