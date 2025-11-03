@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "detalles_ventas",
+						"referenceName": "silver_detalles_venta",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -68,15 +68,21 @@
 				"     input(",
 				"          sls_ord_num as string,",
 				"          sls_prd_key as string,",
-				"          sls_cust_id as string,",
-				"          sls_order_dt as string,",
-				"          sls_ship_dt as string,",
-				"          sls_sales as string,",
-				"          sls_quantity as string,",
-				"          sls_price as string",
+				"          sls_cust_id as integer,",
+				"          sls_order_dt as date,",
+				"          sls_ship_dt as date,",
+				"          sls_sales as integer,",
+				"          sls_quantity as integer,",
+				"          sls_price as integer",
 				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
