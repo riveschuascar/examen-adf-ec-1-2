@@ -1,0 +1,74 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "clientes",
+						"type": "DatasetReference"
+					},
+					"name": "clientes"
+				},
+				{
+					"dataset": {
+						"referenceName": "clientes_bd_gen",
+						"type": "DatasetReference"
+					},
+					"name": "clientesBdGen"
+				},
+				{
+					"dataset": {
+						"referenceName": "clientes_location",
+						"type": "DatasetReference"
+					},
+					"name": "clientesLocation"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          cst_id as string,",
+				"          cst_key as string,",
+				"          cst_firstname as string,",
+				"          cst_lastname as string,",
+				"          cst_marital_status as string,",
+				"          cst_gndr as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> clientes",
+				"source(output(",
+				"          CID as string,",
+				"          BDATE as string,",
+				"          GEN as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> clientesBdGen",
+				"source(output(",
+				"          CID as string,",
+				"          CNTRY as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> clientesLocation",
+				"clientes derive() ~> derivedColumn1",
+				"clientesBdGen derive() ~> derivedColumn2",
+				"clientesLocation derive() ~> derivedColumn3"
+			]
+		}
+	}
+}
