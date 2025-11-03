@@ -36,7 +36,10 @@
 				"          PRD_KEY = upper(trim(sls_prd_key)),",
 				"          CUST_ID = toInteger(sls_cust_id),",
 				"          ORDER_DATE = toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd'),",
-				"          columna1 = ERROR_FUNCTION('')) ~> derivedColumnVentas"
+				"          SHIP_DATE = toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd'),",
+				"          SALES = toDecimal(sls_sales,10,2),",
+				"          QUANTITY = toInteger(sls_quantity),",
+				"          PRICE = toDecimal(sls_price,10,2)) ~> derivedColumnVentas"
 			]
 		}
 	}
