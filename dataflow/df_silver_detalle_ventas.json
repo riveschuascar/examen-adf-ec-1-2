@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "detalles_ventas",
+						"referenceName": "silver_detalles_venta",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -27,9 +27,6 @@
 			"transformations": [
 				{
 					"name": "derivedColumnVentas"
-				},
-				{
-					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -46,15 +43,35 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> ventasDetalles",
-				"ventasDetalles derive(ORD_NUM = upper(trim(sls_ord_num)),",
-				"          PRD_KEY = upper(trim(sls_prd_key)),",
-				"          CUST_ID = toInteger(sls_cust_id),",
-				"          ORDER_DATE = toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd'),",
-				"          SHIP_DATE = toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd'),",
-				"          SALES = toDecimal(sls_sales,10,2),",
-				"          QUANTITY = toInteger(sls_quantity),",
-				"          PRICE = toDecimal(sls_price,10,2)) ~> derivedColumnVentas",
-				"derivedColumnVentas select(mapColumn(",
+				"ventasDetalles derive(sls_ord_num = upper(trim(sls_ord_num)),",
+				"          sls_prd_key = upper(trim(sls_prd_key)),",
+				"          sls_cust_id = toInteger(sls_cust_id),",
+				"          sls_order_dt = toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd'),",
+				"          sls_ship_dt = toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd'),",
+				"          sls_sales = toInteger(sls_sales),",
+				"          sls_quantity = toInteger(sls_quantity),",
+				"          sls_price = toInteger(sls_price)) ~> derivedColumnVentas",
+				"derivedColumnVentas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as integer,",
+				"          sls_order_dt as date,",
+				"          sls_ship_dt as date,",
+				"          sls_sales as integer,",
+				"          sls_quantity as integer,",
+				"          sls_price as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
 				"          sls_ord_num,",
 				"          sls_prd_key,",
 				"          sls_cust_id,",
@@ -63,23 +80,7 @@
 				"          sls_sales,",
 				"          sls_quantity,",
 				"          sls_price",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          sls_ord_num as string,",
-				"          sls_prd_key as string,",
-				"          sls_cust_id as string,",
-				"          sls_order_dt as string,",
-				"          sls_ship_dt as string,",
-				"          sls_sales as string,",
-				"          sls_quantity as string,",
-				"          sls_price as string",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     )) ~> sink1"
 			]
 		}
 	}

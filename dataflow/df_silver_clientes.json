@@ -56,6 +56,9 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -112,24 +115,17 @@
 				"          cst_lastname,",
 				"          cst_marital_status,",
 				"          cst_gndr,",
-				"          CID_clean = derivedColumn1@CID_clean,",
-				"          FIRSTNAME,",
-				"          LASTNAME,",
-				"          MARITAL_STATUS,",
-				"          GENDER,",
-				"          CID = clientesBdGen@CID,",
 				"          BDATE,",
 				"          GEN,",
-				"          CID_clean = derivedColumn2@CID_clean,",
-				"          GENDER_BD,",
-				"          CID = clientesLocation@CID,",
-				"          CNTRY,",
-				"          CID_clean = derivedColumn3@CID_clean,",
-				"          COUNTRY",
+				"          CNTRY",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"select1 cast(output(",
+				"          cst_id as integer",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          cst_id as integer,",
@@ -150,6 +146,7 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
+				"          cst_id,",
 				"          cst_key,",
 				"          cst_firstname,",
 				"          cst_lastname,",

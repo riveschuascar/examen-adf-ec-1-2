@@ -58,6 +58,9 @@
 				},
 				{
 					"name": "cast2"
+				},
+				{
+					"name": "derivedColumn8"
 				}
 			],
 			"scriptLines": [
@@ -94,17 +97,18 @@
 				"          cat = trim(cat),",
 				"          subcat = trim(subcat)) ~> derivedColumn4",
 				"derivedColumn4 derive(mant_clean = iif(upper(trim(maintenance)) == 'YES', true(), false())) ~> derivedColumn5",
-				"derivedColumn5 derive(id_clean = upper(replace(trim(id), '_', '-'))) ~> derivedColumn6",
-				"derivedColumn7, derivedColumn6 join(prd_key_clean == id_clean,",
-				"     joinType:'inner',",
+				"derivedColumn5 derive(id_join = upper(replace(trim(id), '_', '-'))) ~> derivedColumn6",
+				"derivedColumn7, derivedColumn6 join(prd_key_join == id_join,",
+				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"cast2 derive(prd_key_clean = regexReplace(prd_key, '^([A-Z]{2}-[A-Z]{2}).*$', '$1')) ~> derivedColumn7",
+				"derivedColumn8 derive(prd_key_join = regexReplace(prd_key, '^([A-Z]{2}-[A-Z]{2}).*$', '$1')) ~> derivedColumn7",
 				"derivedColumn3 cast(output(",
 				"          prd_cost as integer",
 				"     ),",
 				"     errors: true) ~> cast2",
+				"cast2 derive(prd_key_clean = regexReplace(prd_key, '^[A-Z]{2}-[A-Z]{2}-(.*)$', '$1')) ~> derivedColumn8",
 				"join1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
