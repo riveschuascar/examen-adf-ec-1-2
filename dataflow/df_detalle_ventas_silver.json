@@ -33,7 +33,10 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> ventasDetalles",
 				"ventasDetalles derive(ORD_NUM = upper(trim(sls_ord_num)),",
-				"          PRD_KEY = upper(trim(sls_prd_key))) ~> derivedColumnVentas"
+				"          PRD_KEY = upper(trim(sls_prd_key)),",
+				"          CUST_ID = toInteger(sls_cust_id),",
+				"          ORDER_DATE = toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd'),",
+				"          columna1 = ERROR_FUNCTION('')) ~> derivedColumnVentas"
 			]
 		}
 	}
