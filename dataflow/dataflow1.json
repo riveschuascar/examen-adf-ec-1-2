@@ -41,7 +41,10 @@
 					"name": "joinClientesBdGen"
 				},
 				{
-					"name": "join1"
+					"name": "joinFinal"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -86,11 +89,35 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinClientesBdGen",
-				"joinClientesBdGen, derivedColumn3 join(clientesBdGen@CID == derivedColumn3@CID_clean,",
+				"joinClientesBdGen, derivedColumn3 join(derivedColumn1@CID_clean == derivedColumn3@CID_clean,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> joinFinal",
+				"joinFinal select(mapColumn(",
+				"          cst_id,",
+				"          cst_key,",
+				"          cst_firstname,",
+				"          cst_lastname,",
+				"          cst_marital_status,",
+				"          cst_gndr,",
+				"          CID_clean = derivedColumn1@CID_clean,",
+				"          FIRSTNAME,",
+				"          LASTNAME,",
+				"          MARITAL_STATUS,",
+				"          GENDER,",
+				"          CID = clientesBdGen@CID,",
+				"          BDATE,",
+				"          GEN,",
+				"          CID_clean = derivedColumn2@CID_clean,",
+				"          GENDER_BD,",
+				"          CID = clientesLocation@CID,",
+				"          CNTRY,",
+				"          CID_clean = derivedColumn3@CID_clean,",
+				"          COUNTRY",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
