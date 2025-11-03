@@ -65,7 +65,11 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> clientesLocation",
-				"clientes derive() ~> derivedColumn1",
+				"clientes derive(CID_clean = replace(cst_key,' ',''),",
+				"          FIRSTNAME = upper(trim(cst_firstname)),",
+				"          LASTNAME = upper(trim(cst_lastname)),",
+				"          MARITAL_STATUS = trim(cst_marital_status),",
+				"          GENDER = ERROR_FUNCTION('')) ~> derivedColumn1",
 				"clientesBdGen derive() ~> derivedColumn2",
 				"clientesLocation derive() ~> derivedColumn3"
 			]
