@@ -117,12 +117,9 @@
 				"          cst_firstname,",
 				"          cst_lastname,",
 				"          cst_marital_status,",
-				"          cst_gndr,",
-				"          cid = derivedColumn2@cid,",
 				"          bdate,",
-				"          gen,",
-				"          cid = derivedColumn3@cid,",
-				"          cntry",
+				"          cntry,",
+				"          gen",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
@@ -157,7 +154,7 @@
 				"          cst_lastname,",
 				"          cst_marital_status,",
 				"          bdate,",
-				"          gen = cst_gndr,",
+				"          gen,",
 				"          cntry",
 				"     )) ~> sink1"
 			]
