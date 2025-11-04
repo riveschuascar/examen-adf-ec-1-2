@@ -19,13 +19,6 @@
 						"referenceName": "dim_fecha",
 						"type": "DatasetReference"
 					},
-					"name": "dimFechaP"
-				},
-				{
-					"dataset": {
-						"referenceName": "dim_fecha",
-						"type": "DatasetReference"
-					},
 					"name": "dimFechaQ"
 				},
 				{
@@ -41,6 +34,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "dimCliente"
+				},
+				{
+					"dataset": {
+						"referenceName": "dim_fecha",
+						"type": "DatasetReference"
+					},
+					"name": "dimFechaP"
 				}
 			],
 			"sinks": [
@@ -85,21 +85,13 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
 				"source(output(",
-				"          id_date as integer,",
+				"          id_ship_dt as integer,",
 				"          dates as date",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: '',",
-				"     format: 'query') ~> dimFechaP",
-				"source(output(",
-				"          fpartida as date",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'SELECT dates AS fpartida\\nFROM gold.dim_dates',",
+				"     query: 'SELECT\\nid_date AS id_ship_dt,\\ndates\\nFROM gold.dim_dates',",
 				"     format: 'query') ~> dimFechaQ",
 				"source(output(",
 				"          prd_key as string,",
@@ -126,11 +118,20 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> dimCliente",
+				"source(output(",
+				"          id_order_dt as integer,",
+				"          dates as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT\\nid_date AS id_order_dt,\\ndates\\nFROM gold.dim_dates',",
+				"     format: 'query') ~> dimFechaP",
 				"source1, dimFechaP lookup(sls_order_dt == dates,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> fecha1",
-				"fecha1, dimFechaQ lookup(sls_ship_dt == fpartida,",
+				"fecha1, dimFechaQ lookup(sls_ship_dt == dimFechaQ@dates,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> fechas2",
@@ -147,8 +148,8 @@
 				"          sls_sales,",
 				"          sls_quantity,",
 				"          sls_price,",
-				"          id_date,",
-				"          fpartida,",
+				"          id_order_dt,",
+				"          id_ship_dt,",
 				"          cst_id,",
 				"          prd_key",
 				"     ),",
@@ -177,9 +178,9 @@
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          sls_ord_num,",
-				"          sls_prd_key,",
+				"          sls_prd_key = prd_key,",
 				"          sls_cust_id = cst_id,",
-				"          id_order_dt = id_date,",
+				"          id_order_dt,",
 				"          id_ship_dt,",
 				"          sls_sales,",
 				"          sls_quantity,",
