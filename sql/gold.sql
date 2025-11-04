@@ -12,7 +12,7 @@ GO
 
 CREATE TABLE gold.dim_gender (
     id_gen INT PRIMARY KEY IDENTITY(1,1),
-    gen NVARCHAR(1)
+    gen NVARCHAR(255)
 );
 GO
 
@@ -20,7 +20,7 @@ CREATE TABLE gold.dim_customer (
     cst_id INT PRIMARY KEY,
     cst_firstname NVARCHAR(255),
     cst_lastname NVARCHAR(255),
-    cst_marital_status NVARCHAR(1),
+    cst_marital_status NVARCHAR(255),
     bdate DATE,
     id_cntry INT,
     id_gen INT
@@ -34,10 +34,11 @@ CREATE TABLE gold.dim_category (
 GO
 
 CREATE TABLE gold.dim_product (
-    prd_key VARCHAR(255) PRIMARY KEY,
+    id INT PRIMARY KEY,
+    prd_key VARCHAR(255),
     prd_nm NVARCHAR(255),
     prd_cost INT,
-    prd_line NVARCHAR(1),
+    prd_line NVARCHAR(255),
     id_cat INT,
     maintenance BIT
 );
@@ -52,7 +53,7 @@ GO
 CREATE TABLE gold.facts_sales (
     id_fact INT PRIMARY KEY IDENTITY(1,1),
     sls_ord_num VARCHAR(255),
-    sls_prd_key VARCHAR(255),
+    sls_prd_id INT,
     sls_cust_id INT,
     id_order_dt INT,
     id_ship_dt INT,
@@ -89,7 +90,7 @@ GO
 
 ALTER TABLE gold.facts_sales
 ADD CONSTRAINT fk_facts_sales_product
-FOREIGN KEY (sls_prd_key) REFERENCES gold.dim_product (prd_key);
+FOREIGN KEY (sls_prd_id) REFERENCES dim_product (id);
 GO
 
 ALTER TABLE gold.facts_sales

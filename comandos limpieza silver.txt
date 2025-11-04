@@ -1,0 +1,48 @@
+// Clientes
+CID_clean	replace(cst_key,' ','')
+FIRSTNAME	upper(trim(cst_firstname))
+LASTNAME	upper(trim(cst_lastname))
+MARITAL_STATUS	trim(cst_marital_status)
+GENDER		trim(cst_gndr)
+
+// Clientes_db_gen
+CID_clean	replace(CID,'NAS','')
+BDATE		toDate(BDATE,'yyyy-MM-dd')
+GENDER_BD	upper(trim(GEN))
+
+// Clientes_location
+CID_clean	replace(CID,'-','')
+COUNTRY		upper(trim(CNTRY))
+
+CID_clean == CID_clean
+CID_clean, FIRSTNAME, LASTNAME, MARITAL_STATUS, GENDER, BDATE, GENDER_BD, COUNTRY
+****************************************************
+
+// Productos
+trim(prd_key)
+trim(prd_nm)
+trim(prd_line)
+iif(isNull(prd_cost) || trim(prd_cost) == "", "0", trim(prd_cost)) // remplazar nulos por 0
+regexReplace(prd_key, '^([A-Z]{2}-[A-Z]{2}).*$', '$1') // obtener los 2 primeros 'XX-YY'
+regexReplace(prd_key, '^[A-Z]{2}-[A-Z]{2}-(.*)$', '$1') // obtener el resto para prd_key
+
+// Productos_cat_mant
+trim(id)
+trim(cat)
+trim(subcat)
+iif(upper(trim(maintenance)) == 'YES', true(), false()) // Remplazar mantenimiento por true o false
+upper(replace(trim(id), '_', '-')) as id_join // convertir de 'XX_YY' a 'XX-YY'
+
+***********************************************
+// Detalles ventas
+upper(trim(sls_ord_num))
+upper(trim(sls_prd_key))
+toInteger(sls_cust_id)
+
+toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd')
+
+toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd')
+
+toInteger(sls_sales)
+toInteger(sls_quantity)
+toInteger(sls_price)

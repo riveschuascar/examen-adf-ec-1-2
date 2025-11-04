@@ -11,7 +11,7 @@ CREATE TABLE silver.customer (
     cst_lastname NVARCHAR(255),
     cst_marital_status NVARCHAR(1),
     bdate DATE,
-    gen NVARCHAR(1),
+    gen NVARCHAR(255),
     cntry NVARCHAR(255)
 );
 GO
