@@ -1,0 +1,161 @@
+{
+	"name": "dimensiones_base",
+	"properties": {
+		"activities": [
+			{
+				"name": "df_dim_genero",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_dim_genero",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "df_dim_pais",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "df_dim_genero",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_dim_pais",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "df_dim_cliente",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "df_dim_pais",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_dim_cliente",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "df_dim_categoria",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "df_dim_cliente",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_dim_categoria",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ventas",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "-- Desactivar temporalmente las restricciones FK\nALTER TABLE gold.facts_sales NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates NOCHECK CONSTRAINT ALL;\n\n-- Eliminar datos respetando las dependencias\nDELETE FROM gold.dim_category;\nDELETE FROM gold.dim_country;\nDELETE FROM gold.dim_gender;\nDELETE FROM gold.dim_dates;\n\n-- Reactivar restricciones\nALTER TABLE gold.facts_sales CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates CHECK CONSTRAINT ALL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": []
+	}
+}

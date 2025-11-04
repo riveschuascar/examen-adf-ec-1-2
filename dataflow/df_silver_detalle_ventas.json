@@ -1,0 +1,88 @@
+{
+	"name": "df_silver_detalle_ventas",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "table_sales",
+						"type": "DatasetReference"
+					},
+					"name": "ventasDetalles"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_detalles_venta",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumnVentas"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as string,",
+				"          sls_order_dt as string,",
+				"          sls_ship_dt as string,",
+				"          sls_sales as string,",
+				"          sls_quantity as string,",
+				"          sls_price as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ventasDetalles",
+				"ventasDetalles derive(sls_ord_num = upper(trim(sls_ord_num)),",
+				"          sls_prd_key = upper(trim(sls_prd_key)),",
+				"          sls_cust_id = toInteger(sls_cust_id),",
+				"          sls_order_dt = toDate(substring(sls_order_dt,1,4) + '-' + substring(sls_order_dt,5,2) + '-' + substring(sls_order_dt,7,2),'yyyy-MM-dd'),",
+				"          sls_ship_dt = toDate(substring(sls_ship_dt,1,4) + '-' + substring(sls_ship_dt,5,2) + '-' + substring(sls_ship_dt,7,2),'yyyy-MM-dd'),",
+				"          sls_sales = toInteger(sls_sales),",
+				"          sls_quantity = toInteger(sls_quantity),",
+				"          sls_price = toInteger(sls_price)) ~> derivedColumnVentas",
+				"derivedColumnVentas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as integer,",
+				"          sls_order_dt as date,",
+				"          sls_ship_dt as date,",
+				"          sls_sales as integer,",
+				"          sls_quantity as integer,",
+				"          sls_price as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          sls_ord_num,",
+				"          sls_prd_key,",
+				"          sls_cust_id,",
+				"          sls_order_dt,",
+				"          sls_ship_dt,",
+				"          sls_sales,",
+				"          sls_quantity,",
+				"          sls_price",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

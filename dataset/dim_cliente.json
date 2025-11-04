@@ -1,0 +1,51 @@
+{
+	"name": "dim_cliente",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ventas",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cst_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cst_firstname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_lastname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cst_marital_status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "bdate",
+				"type": "date"
+			},
+			{
+				"name": "id_cntry",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_gen",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "dim_customer"
+		}
+	}
+}
