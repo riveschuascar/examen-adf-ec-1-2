@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "detalles_ventas",
+						"referenceName": "table_sales",
 						"type": "DatasetReference"
 					},
 					"name": "ventasDetalles"
@@ -42,7 +42,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> ventasDetalles",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ventasDetalles",
 				"ventasDetalles derive(sls_ord_num = upper(trim(sls_ord_num)),",
 				"          sls_prd_key = upper(trim(sls_prd_key)),",
 				"          sls_cust_id = toInteger(sls_cust_id),",
