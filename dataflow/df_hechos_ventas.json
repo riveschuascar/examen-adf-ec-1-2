@@ -1,0 +1,191 @@
+{
+	"name": "df_hechos_ventas",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_detalles_venta",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "dim_fecha",
+						"type": "DatasetReference"
+					},
+					"name": "dimFechaP"
+				},
+				{
+					"dataset": {
+						"referenceName": "dim_fecha",
+						"type": "DatasetReference"
+					},
+					"name": "dimFechaQ"
+				},
+				{
+					"dataset": {
+						"referenceName": "dim_producto",
+						"type": "DatasetReference"
+					},
+					"name": "dimProducto"
+				},
+				{
+					"dataset": {
+						"referenceName": "dim_cliente",
+						"type": "DatasetReference"
+					},
+					"name": "dimCliente"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "hechos_ventas",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "fecha1"
+				},
+				{
+					"name": "fechas2"
+				},
+				{
+					"name": "cliente"
+				},
+				{
+					"name": "producto"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as integer,",
+				"          sls_order_dt as date,",
+				"          sls_ship_dt as date,",
+				"          sls_sales as integer,",
+				"          sls_quantity as integer,",
+				"          sls_price as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          id_date as integer,",
+				"          dates as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: '',",
+				"     format: 'query') ~> dimFechaP",
+				"source(output(",
+				"          fpartida as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT dates AS fpartida\\nFROM gold.dim_dates',",
+				"     format: 'query') ~> dimFechaQ",
+				"source(output(",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as integer,",
+				"          prd_line as string,",
+				"          id_cat as integer,",
+				"          maintenance as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimProducto",
+				"source(output(",
+				"          cst_id as integer,",
+				"          cst_firstname as string,",
+				"          cst_lastname as string,",
+				"          cst_marital_status as string,",
+				"          bdate as date,",
+				"          id_cntry as integer,",
+				"          id_gen as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dimCliente",
+				"source1, dimFechaP lookup(sls_order_dt == dates,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> fecha1",
+				"fecha1, dimFechaQ lookup(sls_ship_dt == fpartida,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> fechas2",
+				"fechas2, dimCliente lookup(sls_cust_id == cst_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> cliente",
+				"cliente, dimProducto lookup(sls_prd_key == prd_key,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> producto",
+				"producto select(mapColumn(",
+				"          sls_ord_num,",
+				"          sls_sales,",
+				"          sls_quantity,",
+				"          sls_price,",
+				"          id_date,",
+				"          fpartida,",
+				"          cst_id,",
+				"          prd_key",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_fact as integer,",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as integer,",
+				"          id_order_dt as integer,",
+				"          id_ship_dt as integer,",
+				"          sls_sales as integer,",
+				"          sls_quantity as integer,",
+				"          sls_price as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          sls_ord_num,",
+				"          sls_prd_key,",
+				"          sls_cust_id = cst_id,",
+				"          id_order_dt = id_date,",
+				"          id_ship_dt,",
+				"          sls_sales,",
+				"          sls_quantity,",
+				"          sls_price",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
