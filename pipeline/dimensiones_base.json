@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "dimensiones_base",
 	"properties": {
 		"activities": [
 			{
@@ -127,99 +127,6 @@
 				}
 			},
 			{
-				"name": "df_dim_producto",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "df_dim_categoria",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_dim_producto",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "df_dim_fecha",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "df_dim_producto",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_dim_fecha",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "df_hechos_ventas",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "df_dim_fecha",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_hechos_ventas",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "Script1",
 				"type": "Script",
 				"dependsOn": [],
@@ -239,7 +146,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "-- Desactivar temporalmente las restricciones FK\nALTER TABLE gold.facts_sales NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates NOCHECK CONSTRAINT ALL;\n\n-- Eliminar datos respetando las dependencias\nDELETE FROM gold.facts_sales;\nDELETE FROM gold.dim_product;\nDELETE FROM gold.dim_category;\nDELETE FROM gold.dim_customer;\nDELETE FROM gold.dim_country;\nDELETE FROM gold.dim_gender;\nDELETE FROM gold.dim_dates;\n\n-- Reactivar restricciones\nALTER TABLE gold.facts_sales CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates CHECK CONSTRAINT ALL;"
+							"text": "-- Desactivar temporalmente las restricciones FK\nALTER TABLE gold.facts_sales NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender NOCHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates NOCHECK CONSTRAINT ALL;\n\n-- Eliminar datos respetando las dependencias\nDELETE FROM gold.dim_category;\nDELETE FROM gold.dim_country;\nDELETE FROM gold.dim_gender;\nDELETE FROM gold.dim_dates;\n\n-- Reactivar restricciones\nALTER TABLE gold.facts_sales CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_product CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_category CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_customer CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_country CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_gender CHECK CONSTRAINT ALL;\nALTER TABLE gold.dim_dates CHECK CONSTRAINT ALL;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"

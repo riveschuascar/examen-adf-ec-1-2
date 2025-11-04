@@ -12,6 +12,11 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
 				"name": "prd_key",
 				"type": "varchar"
 			},
@@ -36,11 +41,6 @@
 			{
 				"name": "maintenance",
 				"type": "bit"
-			},
-			{
-				"name": "id",
-				"type": "int",
-				"precision": 10
 			}
 		],
 		"typeProperties": {

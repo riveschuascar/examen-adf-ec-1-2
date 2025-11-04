@@ -21,8 +21,9 @@
 				"type": "varchar"
 			},
 			{
-				"name": "sls_prd_key",
-				"type": "varchar"
+				"name": "sls_prd_id",
+				"type": "int",
+				"precision": 10
 			},
 			{
 				"name": "sls_cust_id",
