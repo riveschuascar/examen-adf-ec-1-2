@@ -67,6 +67,7 @@
 				"     broadcast: 'auto')~> lookup1",
 				"lookup1 select(mapColumn(",
 				"          prd_key,",
+				"          prd_id,",
 				"          prd_nm,",
 				"          prd_cost,",
 				"          prd_line,",
@@ -83,7 +84,8 @@
 				"          prd_cost as integer,",
 				"          prd_line as string,",
 				"          id_cat as integer,",
-				"          maintenance as boolean",
+				"          maintenance as boolean,",
+				"          id as integer",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -99,7 +101,8 @@
 				"          prd_cost,",
 				"          prd_line,",
 				"          id_cat,",
-				"          maintenance",
+				"          maintenance,",
+				"          id = prd_id",
 				"     )) ~> sink1"
 			]
 		}

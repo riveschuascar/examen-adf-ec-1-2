@@ -36,6 +36,11 @@
 			{
 				"name": "maintenance",
 				"type": "bit"
+			},
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
 			}
 		],
 		"typeProperties": {
